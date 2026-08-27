@@ -1,0 +1,8 @@
+{
+  "name": "SIGE - Sistema de Gestão Escolar",
+  "description": "Sistema de Controlo de Acesso Baseado em Papéis (RBAC) com autenticação JWT e gestão de utilizadores.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
