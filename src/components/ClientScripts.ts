@@ -464,6 +464,12 @@ export function ClientScripts(): string {
                 <button onclick="handleToggleUserStatus(\${u.id})" class="bg-slate-700 hover:bg-slate-600 text-slate-200 px-2.5 py-1 rounded text-xs transition">
                   <i class="fa-solid \${u.ativo ? 'fa-user-slash text-rose-400' : 'fa-user-check text-emerald-400'}"></i> \${u.ativo ? 'Desactivar' : 'Activar'}
                 </button>
+                <button onclick="openEditUserModal(\${u.id}, '\${u.nome}', '\${u.email}', '\${u.role}', '\${u.sector || ''}')" class="bg-sky-700 hover:bg-sky-600 text-white px-2.5 py-1 rounded text-xs transition">
+                  <i class="fa-solid fa-pen-to-square"></i> Editar
+                </button>
+                <button onclick="handleDeleteUser(\${u.id}, '\${u.nome}')" class="bg-rose-700 hover:bg-rose-600 text-white px-2.5 py-1 rounded text-xs transition">
+                  <i class="fa-solid fa-trash"></i> Eliminar
+                </button>
               </td>
             </tr>
           \`;
@@ -530,6 +536,57 @@ export function ClientScripts(): string {
           if (!res.ok) throw new Error(data.erro);
 
           showToast('Estado do utilizador alterado!');
+          loadUtilizadores();
+        } catch (err) {
+          showToast(err.message, true);
+        }
+      }
+
+      function openEditUserModal(id, nome, email, role, sector) {
+        document.getElementById('editUserId').value = id;
+        document.getElementById('editUserNome').value = nome;
+        document.getElementById('editUserEmail').value = email;
+        document.getElementById('editUserSector').value = sector;
+        const sel = document.getElementById('editUserRole');
+        for (let i = 0; i < sel.options.length; i++) {
+          sel.options[i].selected = sel.options[i].value === role;
+        }
+        openModal('modalEditarUtilizador');
+      }
+
+      async function handleSaveEditUser(e) {
+        e.preventDefault();
+        const id = document.getElementById('editUserId').value;
+        const role = document.getElementById('editUserRole').value;
+        const nome = document.getElementById('editUserNome').value;
+        const email = document.getElementById('editUserEmail').value;
+        const sector = document.getElementById('editUserSector').value;
+        try {
+          const resRole = await fetch(\`/auth/users/\${id}/role\`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + currentToken },
+            body: JSON.stringify({ role, nome, email, sector })
+          });
+          const data = await resRole.json();
+          if (!resRole.ok) throw new Error(data.erro);
+          closeModal('modalEditarUtilizador');
+          showToast('Utilizador actualizado com sucesso!');
+          loadUtilizadores();
+        } catch (err) {
+          showToast(err.message, true);
+        }
+      }
+
+      async function handleDeleteUser(userId, nome) {
+        if (!confirm(\`Tem a certeza que deseja eliminar o utilizador "\${nome}"? Esta acção é irreversível.\`)) return;
+        try {
+          const res = await fetch(\`/auth/users/\${userId}\`, {
+            method: 'DELETE',
+            headers: { 'Authorization': 'Bearer ' + currentToken }
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.erro);
+          showToast(\`Utilizador "\${nome}" eliminado com sucesso!\`);
           loadUtilizadores();
         } catch (err) {
           showToast(err.message, true);

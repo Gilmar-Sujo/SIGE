@@ -295,6 +295,103 @@ export function Modals(): string {
     </div>
 
 
+    <!-- MODAL: Editar Utilizador -->
+    <div id="modalEditarUtilizador" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+      <div class="bg-slate-800 border border-slate-700/80 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl shadow-black/40">
+
+        <div class="flex items-center justify-between border-b border-slate-700/80 pb-3">
+          <h3 class="font-bold text-slate-100 text-sm flex items-center gap-2">
+            <span class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center">
+              <i class="fa-solid fa-user-pen text-sky-400"></i>
+            </span>
+            Editar Utilizador
+          </h3>
+
+          <button
+            onclick="closeModal('modalEditarUtilizador')"
+            aria-label="Fechar"
+            class="w-8 h-8 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition flex items-center justify-center">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <form onsubmit="handleSaveEditUser(event)" class="space-y-4 text-xs">
+          <input type="hidden" id="editUserId">
+
+          <div>
+            <label class="block text-slate-300 mb-1.5 font-semibold">
+              Nome Completo <span class="text-red-400">*</span>
+            </label>
+            <input
+              type="text"
+              id="editUserNome"
+              required
+              autocomplete="name"
+              class="w-full bg-slate-900/80 border border-slate-700 rounded-lg p-2.5 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 hover:border-slate-600 transition">
+          </div>
+
+          <div>
+            <label class="block text-slate-300 mb-1.5 font-semibold">
+              Email de Acesso <span class="text-red-400">*</span>
+            </label>
+            <input
+              type="email"
+              id="editUserEmail"
+              required
+              autocomplete="email"
+              class="w-full bg-slate-900/80 border border-slate-700 rounded-lg p-2.5 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 hover:border-slate-600 transition">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-300 mb-1.5 font-semibold">
+                Perfil RBAC <span class="text-red-400">*</span>
+              </label>
+              <select
+                id="editUserRole"
+                class="w-full bg-slate-900/80 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition">
+                <option value="Recepcionista">Recepcionista</option>
+                <option value="Chefe de Sector">Chefe de Sector</option>
+                <option value="Director">Director</option>
+                <option value="Arquivista">Arquivista</option>
+                <option value="Administrador">Administrador</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-slate-300 mb-1.5 font-semibold">Sector Funcional</label>
+              <select
+                id="editUserSector"
+                class="w-full bg-slate-900/80 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition">
+                <option value="Recepção">Recepção</option>
+                <option value="Recursos Humanos">Recursos Humanos</option>
+                <option value="Finanças">Finanças</option>
+                <option value="Secretaria Geral">Secretaria Geral</option>
+                <option value="Direcção Geral">Direcção Geral</option>
+                <option value="Arquivo Geral">Arquivo Geral</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-2 pt-3 border-t border-slate-700/80">
+            <button
+              type="button"
+              onclick="closeModal('modalEditarUtilizador')"
+              class="bg-slate-700/80 hover:bg-slate-600 text-slate-300 hover:text-white px-4 py-2 rounded-lg font-medium transition">
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white font-semibold px-5 py-2 rounded-lg shadow-lg shadow-sky-900/20 transition flex items-center gap-2">
+              <i class="fa-solid fa-floppy-disk"></i>
+              Guardar Alterações
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
     <!-- MODAL: Detalhes do Expediente & Histórico Completo -->
     <div id="modalDetalhesExpediente" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
       <div class="bg-slate-800 border border-slate-700/80 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
@@ -319,7 +416,6 @@ export function Modals(): string {
 
         <div class="p-5 overflow-y-auto space-y-6 text-xs text-slate-300">
 
-          <!-- Metadata grid -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-900/50 p-3 rounded-xl border border-slate-700/60">
             <div>
               <div class="text-[10px] text-slate-400 uppercase tracking-wider">Remetente</div>
@@ -342,7 +438,6 @@ export function Modals(): string {
             </div>
           </div>
 
-          <!-- Assunto -->
           <div>
             <h4 class="font-bold text-slate-200 mb-2 uppercase tracking-wider text-[10px] flex items-center gap-1.5">
               <i class="fa-solid fa-align-left text-sky-400"></i>
@@ -355,7 +450,6 @@ export function Modals(): string {
             </div>
           </div>
 
-          <!-- Documentos e Anexos -->
           <div>
             <h4 class="font-bold text-slate-200 mb-2 uppercase tracking-wider text-[10px] flex items-center gap-1.5">
               <i class="fa-solid fa-paperclip text-sky-400"></i>
@@ -365,7 +459,6 @@ export function Modals(): string {
             <div id="detalheAnexosList" class="flex flex-wrap gap-2"></div>
           </div>
 
-          <!-- Histórico Timeline -->
           <div>
             <h4 class="font-bold text-slate-200 mb-3 uppercase tracking-wider text-[10px] flex items-center gap-1.5">
               <i class="fa-solid fa-route text-sky-400"></i>
@@ -406,7 +499,6 @@ export function Modals(): string {
     <div id="modalComprovativo" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
       <div class="bg-white text-slate-900 rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-300 relative font-sans space-y-4">
 
-        <!-- Official Government Header -->
         <div class="text-center space-y-1 border-b-2 border-slate-900 pb-3">
           <div class="text-[11px] font-bold tracking-widest text-slate-700 uppercase">
             República de Moçambique
@@ -460,7 +552,6 @@ export function Modals(): string {
           </div>
         </div>
 
-        <!-- Simulated Barcode / QR Section -->
         <div class="flex items-center justify-between border-t border-slate-300 pt-4 text-xs">
 
           <div class="space-y-1">
@@ -486,7 +577,6 @@ export function Modals(): string {
 
         </div>
 
-        <!-- Action Buttons -->
         <div class="flex justify-between items-center pt-3 border-t border-slate-200 no-print">
 
           <button
@@ -578,7 +668,6 @@ export function Modals(): string {
 
       <div class="bg-slate-800 border border-slate-700/80 rounded-2xl max-w-md w-full shadow-2xl shadow-black/50 overflow-hidden flex flex-col">
 
-        <!-- Header with 2 Tabs -->
         <div class="bg-slate-900 p-6 border-b border-slate-700/80 text-center relative">
 
           <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-600 to-indigo-600 text-white flex items-center justify-center mx-auto shadow-lg mb-3 border border-sky-400/30">
@@ -593,7 +682,6 @@ export function Modals(): string {
             Sistema Integrado de Gestão de Expedientes (RBAC)
           </p>
 
-          <!-- 2 Sub-tabs Navigation: Login & Recover -->
           <div class="grid grid-cols-2 gap-1.5 bg-slate-800 p-1.5 rounded-xl mt-4 border border-slate-700/80 text-xs font-semibold">
 
             <button
@@ -615,10 +703,8 @@ export function Modals(): string {
           </div>
         </div>
 
-        <!-- Body Form Views -->
         <div class="p-6 text-xs space-y-4">
 
-          <!-- VIEW 1: LOGIN -->
           <div id="authViewLogin" class="space-y-4">
 
             <form onsubmit="handleExecuteAuthLogin(event)" class="space-y-4">
@@ -712,7 +798,6 @@ export function Modals(): string {
 
             </form>
 
-            <!-- Internal Registration Disclaimer Note -->
             <div class="bg-slate-900/80 border border-slate-700/80 p-3 rounded-xl text-[11px] text-slate-400 flex items-start gap-2">
 
               <span class="w-6 h-6 shrink-0 rounded-lg bg-sky-500/10 flex items-center justify-center">
@@ -729,7 +814,6 @@ export function Modals(): string {
           </div>
 
 
-          <!-- VIEW 2: RECOVER PASSWORD -->
           <div id="authViewRecover" class="space-y-4 hidden">
 
             <div class="bg-amber-950/40 border border-amber-500/30 p-3 rounded-xl text-[11px] text-amber-200 flex items-start gap-2">
@@ -857,7 +941,6 @@ export function Modals(): string {
 
         <form onsubmit="handleSaveProfile(event)" class="space-y-4 text-xs">
 
-          <!-- User Avatar & Profile Header -->
           <div class="flex items-center gap-4 bg-slate-900/60 p-3 rounded-xl border border-slate-700/80">
 
             <div class="relative group shrink-0">
@@ -913,7 +996,6 @@ export function Modals(): string {
           </div>
 
 
-          <!-- Section: Personal Info -->
           <div class="space-y-3">
 
             <div class="font-bold text-slate-300 text-[11px] uppercase tracking-wider font-mono border-b border-slate-700/60 pb-1 flex items-center gap-2">
@@ -966,7 +1048,6 @@ export function Modals(): string {
           </div>
 
 
-          <!-- Section: Change Password -->
           <div class="space-y-3 pt-1">
 
             <div class="font-bold text-slate-300 text-[11px] uppercase tracking-wider font-mono border-b border-slate-700/60 pb-1 flex items-center justify-between">

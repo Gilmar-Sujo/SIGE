@@ -1,3 +1,4 @@
+import { prisma } from './lib/prisma';
 import 'dotenv/config';
 import express from 'express';
 import authRoutes from './routes/authRoutes';
@@ -7,7 +8,8 @@ import dashboardRoutes from './routes/dashboardRoutes';
 import { renderDashboardPage } from './components/Layout';
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use('/auth', authRoutes);
 app.use('/expedientes', expedienteRoutes);
@@ -22,4 +24,3 @@ const PORT = 3000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor a correr na porta ${PORT}`);
 });
-

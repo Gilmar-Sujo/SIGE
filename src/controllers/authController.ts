@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { registerUser, loginUser, getUsersList, createUserWithRole, updateUserRole, toggleUserStatus, recoverPassword, updateUserProfile } from '../services/authService';
+import { registerUser, loginUser, getUsersList, createUserWithRole, updateUserRole, deleteUser, toggleUserStatus, recoverPassword, updateUserProfile } from '../services/authService';
 import { AuthRequest } from '../middlewares/authMiddleware';
 
 export async function register(req: Request, res: Response) {
@@ -53,10 +53,10 @@ export async function createUser(req: Request, res: Response) {
 export async function changeUserRole(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const { role } = req.body;
+    const { role, nome, email, sector } = req.body;
     if (!role) return res.status(400).json({ erro: 'Perfil (role) é obrigatório' });
 
-    const user = await updateUserRole(Number(id), role);
+    const user = await updateUserRole(Number(id), role, { nome, email, sector });
     return res.json({ mensagem: 'Perfil atualizado com sucesso', user });
   } catch (error: any) {
     return res.status(400).json({ erro: error.message });
@@ -68,6 +68,17 @@ export async function changeUserStatus(req: Request, res: Response) {
     const { id } = req.params;
     const user = await toggleUserStatus(Number(id));
     return res.json({ mensagem: 'Estado do utilizador alterado', user });
+  } catch (error: any) {
+    return res.status(400).json({ erro: error.message });
+  }
+}
+
+export async function removeUser(req: AuthRequest, res: Response) {
+  try {
+    const { id } = req.params;
+    const requesterId = req.usuario?.id;
+    const resultado = await deleteUser(Number(id), Number(requesterId));
+    return res.json({ mensagem: `Utilizador ${resultado.nome} eliminado com sucesso`, user: resultado });
   } catch (error: any) {
     return res.status(400).json({ erro: error.message });
   }

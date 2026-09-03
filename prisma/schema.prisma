@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  nome  String @unique
+  users User[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String   @unique
+  senha     String
+  roleId    Int
+  role      Role     @relation(fields: [roleId], references: [id])
+  sector    String?
+  foto      String?  @db.Text
+  ativo     Boolean  @default(true)
+  criadoEm  DateTime @default(now())
+}
+
+model Expediente {
+  id             Int          @id @default(autoincrement())
+  numeroProcesso String       @unique
+  titulo         String
+  assunto        String       @db.Text
+  remetente      String
+  prioridade     Prioridade   @default(NORMAL)
+  estado         EstadoExpediente @default(REGISTADO)
+  sectorAtual    String
+  autorId        Int
+  autorNome      String
+  anexos         String?      @db.Text
+  criadoEm       DateTime     @default(now())
+  atualizadoEm   DateTime     @updatedAt
+  tramitacoes    Tramitacao[]
+}
+
+model Tramitacao {
+  id             Int          @id @default(autoincrement())
+  expedienteId   Int
+  expediente     Expediente   @relation(fields: [expedienteId], references: [id])
+  origemSector   String
+  destinoSector  String
+  remetenteId    Int
+  remetenteNome  String
+  despacho       String?      @db.Text
+  estado         EstadoTramitacao @default(PENDENTE)
+  dataEnvio      DateTime     @default(now())
+  dataDespacho   DateTime?
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  userNome  String
+  userRole  String
+  acao      String
+  entidade  String
+  detalhes  String   @db.Text
+  ip        String?
+  timestamp DateTime @default(now())
+}
+
+enum Prioridade {
+  BAIXA
+  NORMAL
+  URGENTE
+}
+
+enum EstadoExpediente {
+  REGISTADO
+  EM_TRAMITACAO
+  DESPACHADO
+  ARQUIVADO
+  REJEITADO
+}
+
+enum EstadoTramitacao {
+  PENDENTE
+  CONCLUIDO
+  DEVOLVIDO
+}
