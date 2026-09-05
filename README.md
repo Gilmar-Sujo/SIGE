@@ -1,149 +1,377 @@
-# SIGE — Sistema Integrado de Gestão de Expedientes
+SIGE – Sistema Integrado de Gestão de Expedientes
 
-> **Documentação Técnica e Académica**  
-> *Projecto de Engenharia de Software e Gestão Documental Institucional*
+Sistema web para registo, tramitação, acompanhamento e arquivamento de expedientes institucionais.
 
+Sobre o Projeto
 
-## 📋 Resumo Executivo / Abstract
+O SIGE foi desenvolvido para apoiar a gestão documental e o controlo da tramitação de expedientes dentro de organizações públicas e privadas.
 
-O **SIGE (Sistema Integrado de Gestão de Expedientes)** é uma plataforma web desenvolvida para otimizar, automatizar e auditá-la a tramitação de documentos e expedientes em instituições públicas e privadas. O sistema responde aos desafios clássicos da gestão documental tradicional — como a morosidade nos fluxos de trabalho, a perda ou extravio de processos físicos, a opacidade no acompanhamento de prazos e a vulnerabilidade no acesso à informação sensível.
+A plataforma permite acompanhar o percurso de cada processo desde o registo inicial até ao arquivamento, garantindo rastreabilidade, controlo de acesso e histórico das operações realizadas pelos utilizadores.
 
-Através de uma arquitetura modular moderna e segura, baseada em **Controlo de Acesso Baseado em Papéis (RBAC - Role-Based Access Control)**, o SIGE garante que cada interveniente da hierarquia institucional (Recepcionistas, Chefes de Sector, Directores, Arquivistas e Administradores) exerça exclusivamente as atribuições inerentes ao seu perfil funcional, registando cada ação num repositório imutável de auditoria.
+O sistema implementa autenticação baseada em perfis de acesso (RBAC), possibilitando que cada utilizador execute apenas as ações compatíveis com a sua função.
 
+Principais Funcionalidades
 
+* Registo de expedientes;
+* Tramitação de processos entre sectores;
+* Gestão de utilizadores e perfis;
+* Edição do perfil do utilizador;
+* Controlo de acesso por papéis (RBAC);
+* Registo de auditoria das operações;
+* Consulta do histórico de tramitações;
+* Arquivamento de expedientes;
+* Dashboard de acompanhamento;
+* Gestão de anexos e documentos associados.
 
-## 🎯 Contextualização e Problema Académico
+Arquitetura
 
-Na administração pública e corporativa, o fluxo de expedição, receção, parecer e despacho de documentos representa a espinha dorsal da tomada de decisão. Contudo, a persistência de processos manuais ou semi-automatizados acarreta constrangimentos estruturais:
+O projeto segue uma arquitetura em camadas para facilitar a manutenção, organização e evolução do sistema.
 
-1. **Incapacidade de Rastreabilidade em Tempo Real:** Dificuldade em determinar em que sector ou com que responsável se encontra um processo num determinado momento.
-2. **Vulnerabilidade de Segurança:** Acesso não autorizado a documentos confidenciais devido à ausência de mecanismos rigorosos de autenticação e autorização granulada.
-3. **Ausência de Histórico de Decisões:** Dificuldade em reconstituir a linha temporal de pareceres e despachos exarados sobre um determinado expediente.
-4. **Ineficiência Operacional:** Atrasos na tomada de decisão provocados pela falta de métricas e indicadores de desempenho (KPIs) sobre o tempo médio de tramitação.
+```text
+Frontend
+│
+├── HTML
+├── CSS / Tailwind CSS
+└── JavaScript
 
-O SIGE resolve estas problemáticas implementando uma **esteira digital centralizada e rastreável**, alinhada com as melhores práticas internacionais de Engenharia de Software e Segurança da Informação.
+Backend
+│
+├── Node.js
+├── Express
+├── TypeScript
+│
+├── Controllers
+├── Services
+├── Middlewares
+└── Routes
 
+Persistência
+│
+├── Prisma ORM
+└── MySQL / MariaDB
+```
 
+Tecnologias Utilizadas
 
-## 🏛️ Arquitectura do Sistema
+| Componente        | Tecnologia            |
+| ----------------- | --------------------- |
+| Linguagem         | TypeScript            |
+| Runtime           | Node.js               |
+| Framework Backend | Express               |
+| ORM               | Prisma                |
+| Banco de Dados    | MySQL / MariaDB       |
+| Autenticação      | JWT                   |
+| Criptografia      | bcryptjs              |
+| Frontend          | HTML, CSS, JavaScript |
+| Estilização       | Tailwind CSS          |
+| Gráficos          | Chart.js              |
 
-O sistema foi concebido segundo os princípios da **Arquitectura RESTful** e **Separação de Responsabilidades (SoC)**, combinando um servidor robusto com uma interface dinâmica e responsiva.
+Estrutura do Projeto
 
+```text
+SIGE
+│
+├── prisma
+│   ├── migrations
+│   ├── schema.prisma
+│   └── seed.ts
+│
+├── src
+│   ├── controllers
+│   ├── services
+│   ├── routes
+│   ├── middlewares
+│   ├── components
+│   ├── scripts
+│   ├── lib
+│   └── app.ts
+│
+├── .env
+├── package.json
+└── tsconfig.json
+```
 
-┌────────────────────────────────────────────────────────────────────────┐
-│                        CAMADA DE APRESENTAÇÃO                          │
-│     (HTML5 Semântico, Tailwind CSS, FontAwesome, Chart.js, Vanilla JS)  │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │ Requisições HTTP (Fetch API)
-                                    │ Bearer Token JWT
-┌───────────────────────────────────▼────────────────────────────────────┐
-│                       CAMADA DE APLICAÇÃO (API)                        │
-│            Node.js / Express / TypeScript (Motor RESTful)              │
-│  ┌─────────────────────────┬────────────────────────┬────────────────┐ │
-│  │ Middlewares Auth (JWT)  │   Controladores REST   │ Auditoria Log  │ │
-│  └─────────────────────────┴────────────────────────┴────────────────┘ │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │ ORM / Acesso a Dados
-┌───────────────────────────────────▼────────────────────────────────────┐
-│                         CAMADA DE PERSISTÊNCIA                         │
-│                    Prisma ORM / Banco de Dados SQL                     │
-└────────────────────────────────────────────────────────────────────────┘
+Perfis de Utilizador
 
+Administrador
 
-### Princípios Arquitectónicos Adoptados:
-- **Design RESTful:** Comunicação desacoplada através de endpoints previsíveis (`/expedientes`, `/auth`, `/auditoria`, `/dashboard`).
-- **Segurança Defensiva (Defense in Depth):**
-  - Autenticação stateless baseada em **JSON Web Tokens (JWT)**.
-  - Encriptação unidirecional de palavras-passe com **bcryptjs** (salt factor de 10).
-  - Validação estrita de papéis nos endpoints do servidor via middleware `autorizarPapel(...)`.
-- **Auditoria Imutável (Audit Trail):** Cada transação de criação, alteração de estado, despacho ou alteração de privilégio é registada com timestamp, IP/Sessão e utilizador responsável.
+Responsável pela administração do sistema.
 
+Permissões:
 
+* Gerir utilizadores;
+* Definir papéis de acesso;
+* Consultar auditorias;
+* Configurar o sistema.
 
-## 🔐 Matriz de Permissões e Perfis (RBAC Matrix)
+Director
 
-O controlo de acesso baseia-se no princípio do **Menor Privilégio (Principle of Least Privilege)**:
+Responsável pela supervisão geral dos processos.
 
-| Perfil | Descrição e Escopo Funcional | Permissões Principais |
-| :--- | :--- | :--- |
-| **Administrador** | Gestão técnica da plataforma e infraestrutura de acesso. | Criar/Gerir Utilizadores, Alterar Papéis RBAC, Consultar Logs de Auditoria Globais. |
-| **Director** | Decisão estratégica, superintendência e supervisão geral. | Emitir Despachos Finais, Visualizar Relatórios & KPIs, Aceder à Gestão de Utilizadores e Auditoria. |
-| **Chefe de Sector** | Gestão operacional de expedientes alocados ao seu sector. | Tramitar Expedientes para outros sectores, Emitir Pareceres Técnicos, Registar Despachos Sectoriais. |
-| **Recepcionista** | Porta de entrada dos documentos físicos e digitais na instituição. | Registar Novos Expedientes, Gerar e Imprimir Guias de Recepção/Comprovativos de Entrada. |
-| **Arquivista** | Encerramento, custódia digital e preservação de processos. | Concluir e Arquivar Expedientes Despachados, Gerir Acervo Histórico. |
+Permissões:
 
+* Consultar expedientes;
+* Emitir despachos;
+* Visualizar relatórios.
 
-## ⚙️ Fluxo Operacional de Tramitação (Lifecycle)
+Chefe de Sector
 
-A vida útil de um expediente no SIGE obedece ao seguinte ciclo de estados:
+Responsável pela gestão dos expedientes do seu sector.
 
-mermaid
-stateDiagram-v2
-    [*] --> REGISTADO: Entrada na Recepção (Criar Expediente)
-    REGISTADO --> EM_TRAMITACAO: Tramitado para Sector Competente
-    EM_TRAMITACAO --> EM_TRAMITACAO: Encaminhamento entre Sectores / Parecer
-    EM_TRAMITACAO --> DESPACHADO: Decisão / Despacho pelo Director ou Chefe
-    DESPACHADO --> ARQUIVADO: Conclusão & Arquivo pelo Arquivista / Sistema
-    ARQUIVADO --> [*]
+Permissões:
 
+* Receber expedientes;
+* Emitir pareceres;
+* Tramitar processos.
 
-1. **Registo:** Entrada do documento com atribuição de número único de processo (ex: `EXP-2026-0001`), classificação de prioridade (*NORMAL*, *URGENTE*, *BAIXA*) e digitalização de anexos.
-2. **Tramitação:** Remessa sequencial entre sectores com registo obrigatório do motivo e despacho/parecer preliminar.
-3. **Despacho:** Assinatura digital da decisão final (Deferido, Indeferido, Para Cumprimento, Encaminhado).
-4. **Arquivo:** Encerramento formal do processo e transição para consulta histórica.
+Recepcionista
 
+Responsável pelo registo inicial dos documentos.
 
-## 🛠️ Stack Tecnológica
+Permissões:
 
-| Componente | Tecnologia | Justificação Técnica / Académica |
+* Registar expedientes;
+* Consultar estado dos processos.
 
-| **Linguagem Principal** | **TypeScript 5+** | Tipagem estática em tempo de compilação, prevenindo erros em runtime e garantindo manutenibilidade. |
-| **Ambiente de Execução** | **Node.js** | Arquitectura orientada a eventos e I/O não-bloqueante ideal para APIs REST concorrentes. |
-| **Framework Web** | **Express.js 5** | Leveza, flexibilidade e suporte maduro para middlewares de autenticação e rotas. |
-| **Autenticação & Criptografia** | **JWT & Bcryptjs** | Padrão da indústria para autenticação segura e hashing irreversível de credenciais. |
-| **Camada de Dados (ORM)** | **Prisma ORM** | Abstração segura contra SQL Injection, migrations declarativas e queries fortemente tipadas. |
-| **Interface / Frontend** | **HTML5 + Tailwind CSS** | Design intuitivo, responsivo e de alta performance visual sem sobrecarga de frameworks pesados. |
-| **Visualização de Métricas** | **Chart.js** | Renderização em tempo real de gráficos estatísticos (Doughnut, Bar, Polar Area) para tomada de decisão. |
+Arquivista
 
+Responsável pelo encerramento e arquivamento.
 
+Permissões:
 
-## 🚀 Guia de Instalação e Execução
+* Arquivar processos;
+* Consultar histórico documental.
 
-### 1. Pré-requisitos
-- **Node.js**: Versão 18.x ou superior.
-- **NPM**: Versão 9.x ou superior.
+Fluxo de Tramitação
 
-### 2. Clonar o Repositório e Instalar Dependências
+```text
+REGISTADO
+     │
+     ▼
+EM TRAMITAÇÃO
+     │
+     ▼
+DESPACHADO
+     │
+     ▼
+ARQUIVADO
+```
+
+Etapas
+
+1. Registo do expediente;
+2. Encaminhamento para o sector responsável;
+3. Emissão de pareceres;
+4. Despacho da decisão;
+5. Arquivamento do processo.
+
+Modelo de Dados
+
+A estrutura da base de dados é gerida através do Prisma ORM.
+
+Principais Entidades
+
+Role
+
+Define os perfis de acesso existentes no sistema.
+
+User
+
+Armazena os utilizadores da plataforma.
+
+Campos principais:
+
+* nome;
+* email;
+* senha;
+* roleId;
+* sector;
+* foto;
+* ativo;
+* criadoEm.
+
+Expediente
+
+Representa os processos registados.
+
+Campos principais:
+
+* numeroProcesso;
+* titulo;
+* assunto;
+* remetente;
+* prioridade;
+* estado;
+* sectorAtual;
+* autorId;
+* anexos.
+
+Tramitacao
+
+Regista as movimentações entre sectores.
+
+AuditLog
+
+Mantém o histórico das ações realizadas pelos utilizadores.
+
+Instalação
+
+Pré-requisitos
+
+* Node.js 18 ou superior;
+* NPM 9 ou superior;
+* MySQL ou MariaDB.
+
+### Clonar o Projeto
+
 ```bash
 git clone https://github.com/Gilmar-Sujo/SIGE.git
+
 cd SIGE
+```
+Instalar Dependências
+
+```bash
 npm install
 ```
 
-### 3. Configuração do Ambiente (`.env`)
-Crie ou modifique o ficheiro `.env` na raiz do projecto:
+Configuração do Ambiente
+
+Criar um ficheiro `.env` na raiz do projeto.
+
+Exemplo:
+
 ```env
 PORT=3000
-DATABASE_URL="file:./dev.db"
-JWT_SECRET="sige_chave_secreta_academica_2026_rbac_token"
-NODE_ENV="development"
+
+DATABASE_URL="mysql://root:@localhost:3306/sige_db"
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=sige_db
+
+JWT_SECRET=sua_chave_secreta
+```
+Configuração da Base de Dados
+
+Criar a base de dados:
+
+```sql
+CREATE DATABASE sige_db;
 ```
 
-### 4. Execução em Modo de Desenvolvimento
+Gerar o Prisma Client:
+
+```bash
+npx prisma generate
+```
+
+Aplicar as migrations:
+
+```bash
+npx prisma migrate deploy
+```
+
+Ou:
+
+```bash
+npm run db:migrate
+```
+
+Dados Iniciais
+
+Executar o seed:
+
+```bash
+npm run db:seed
+```
+
+Este processo cria os dados iniciais necessários para utilização do sistema.
+
+Executar o Projeto
+
+Modo de desenvolvimento:
+
 ```bash
 npm run dev
 ```
-O servidor estará acessível em `http://localhost:3000`.
 
-### 5. Compilação e Execução em Produção
-```bash
-npm run build
-npm start
+A aplicação ficará disponível em:
+
+```text
+http://localhost:3000
 ```
 
+Scripts Disponíveis
 
+```bash
+npm run dev
+```
 
-## 📊 Credenciais Pré-configuradas para Testes de Demonstração (Demo Roles)
+Inicia o servidor em modo de desenvolvimento.
+
+```bash
+npm run build
+```
+
+Gera a versão de produção.
+
+```bash
+npm run lint
+```
+
+Verifica erros de TypeScript.
+
+```bash
+npm run db:generate
+```
+
+Gera o Prisma Client.
+
+```bash
+npm run db:migrate
+```
+
+Executa as migrations.
+
+```bash
+npm run db:seed
+```
+
+Insere dados iniciais.
+
+```bash
+npm run db:push
+```
+
+Sincroniza o schema com a base de dados.
+
+Auditoria
+
+O sistema mantém registos das operações realizadas pelos utilizadores.
+
+São registadas ações como:
+
+* criação de expedientes;
+* atualização de dados;
+* tramitações;
+* despachos;
+* alterações de permissões;
+* operações administrativas.
+
+Estado Atual do Projeto
+
+* Edição de perfil implementada;
+* Prisma ORM configurado;
+* Migrations criadas;
+* Seed configurado;
+* Autenticação atualizada;
+* Estrutura da base de dados organizada;
+* TypeScript validado sem erros.
+
+Credenciais Pré-configuradas para Testes de Demonstração (Demo Roles)
 
 Para efeitos de avaliação académica e testes funcionais, o sistema disponibiliza utilizadores pré-cadastrados para cada um dos perfis RBAC (Palavra-passe padrão: `123456`):
 
@@ -152,20 +380,15 @@ Para efeitos de avaliação académica e testes funcionais, o sistema disponibil
 - **Chefe de Sector:** `chefe@sige.gov.mz`
 - **Recepcionista:** `maria@sige.gov.mz`
 
+Equipa de Desenvolvimento
+
+* Gilmar dos Santos Ribeiro
+* Jamisse Joaquim
+
+Licenca
+
+Este projeto utiliza a licença ISC.
 
 
-## 🎓 Contribuição Académica e Próximos Passos
-
-Esta implementação demonstra a viabilidade prática da transformação digital na administração documental. Como linhas de investigação e desenvolvimento futuro, destacam-se:
-
-1. **Assinatura Digital Qualificada (PKI / Chave Pública):** Integração de certificados digitais para validação jurídica de despachos.
-2. **Reconhecimento Óptico de Caracteres (OCR):** Indexação automática do conteúdo textual de documentos digitalizados em PDF.
-3. **Notificações Push / WebSocket em Tempo Real:** Alertas instantâneos sobre a chegada de novos processos urgentes ao sector.
 
 
-
-## 📝 Licença e Autoria
-
-- **Autor:** GILMAR DOS SANTOS RIBEIRO & JAMISSE JOAQUIM / Equipa de Desenvolvimento SIGE
-- **Repositório:** [https://github.com/Gilmar-Sujo/SIGE](https://github.com/Gilmar-Sujo/SIGE)
-- **Licença:** ISC (Internet Systems Consortium License)
